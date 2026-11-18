@@ -1,618 +1,553 @@
 # LIKO OS
-### An Independent, Lightweight, Native x86_64 Operating System
+### A Native 64-Bit Operating System Project
 
 <p align="center">
-  <img src="Assets/Branding/liko-banner.png" alt="LIKO OS Banner" width="100%" />
+  <strong>Independent Kernel · Native Execution · Modular Architecture · Custom Desktop Environment</strong>
 </p>
 
 <p align="center">
-  <strong>ENGINEERED FOR EFFICIENCY. BUILT FOR INDEPENDENCE.</strong>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/PROJECT-LIKO%20OS-101D35?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/ARCHITECTURE-x86__64-1769AA?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/KERNEL-C%20%2B%20ASM-00599C?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/PLATFORM-VMware-607078?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/STATUS-EARLY%20DEVELOPMENT-orange?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Architecture-x86__64-blue?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Kernel-C%20%2B%20Assembly-orange?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Platform-VMware%20Workstation-607078?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Boot-BIOS%20%7C%20UEFI-purple?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Memory-4--32%20GB-success?style=for-the-badge">
 </p>
 
 ---
 
-## 01 — Project Overview
+## 1. Project Overview
 
-**LIKO OS** is an independent operating system development project focused on building a lightweight, native computing environment with a dedicated kernel and a custom graphical user interface.
+**LIKO OS** is an independent operating system development project focused on building a native 64-bit computing environment with its own kernel, hardware abstraction architecture, memory management, device drivers, system services, and graphical desktop environment.
 
-Unlike desktop simulations and applications that imitate operating system interfaces, LIKO OS is intended to operate as a standalone system with its own boot process, kernel architecture, memory management, hardware interaction, and system-level services.
+The project aims to establish a modular operating system architecture capable of running as a bootable ISO image inside VMware Workstation.
 
-The primary development target is VMware Workstation, providing a controlled environment for kernel development, hardware compatibility testing, debugging, and system validation.
+LIKO OS is not intended to be a conventional desktop application or a graphical simulation running on top of another operating system.
 
-The central engineering objective is straightforward:
+Its long-term objective is to execute its own kernel and manage the hardware resources exposed to it by the virtualization platform.
 
-> Build a complete operating system while keeping its architecture, resource consumption, and internal complexity as efficient as possible.
+### Core Objectives
 
-LIKO OS is being developed with C as its primary implementation language, supported by Assembly for low-level operations where required.
+- Independent native kernel development.
+- 64-bit x86 architecture.
+- Direct interaction with VMware-presented hardware.
+- Modular hardware abstraction architecture.
+- Advanced memory management.
+- Process and thread management.
+- Custom graphical desktop environment.
+- Native system utilities and applications.
+- Offline-first operation.
+- Bootable ISO distribution.
 
 ---
 
-## 02 — Engineering Philosophy
+## 2. Technical Specifications
 
-LIKO OS follows six fundamental engineering principles.
-
-| Principle | Engineering Objective |
+| Specification | Target |
 |---|---|
-| Lightweight Architecture | Minimize unnecessary resource consumption |
-| Native Execution | Run directly on the target machine's processor |
-| Hardware Independence | Use hardware abstraction rather than application-level simulation |
-| Offline Capability | Keep core system functionality independent of internet access |
-| Modular Design | Separate kernel, drivers, graphics, and applications |
-| Controlled Development | Validate components independently before integration |
-
-### Lightweight by Design
-
-Performance optimization is not intended to be a final development stage.
-
-It is a design requirement that influences kernel architecture, memory allocation, graphics rendering, system services, and application development from the beginning.
-
-### Native Hardware Access
-
-LIKO OS is not designed around an internal virtual CPU or simulated RAM.
-
-When running inside VMware, it will communicate with the virtual hardware devices presented by the hypervisor through appropriate operating system drivers.
-
-The operating system itself will manage its own memory, processes, and hardware interfaces.
-
----
-
-## 03 — Target Platform & System Specifications
-
-### Target Architecture
-
-| Parameter | Design Specification |
-|---|---|
-| System Architecture | x86_64 |
-| Primary Language | C |
-| Low-Level Language | x86_64 Assembly |
-| Target Hypervisor | VMware Workstation |
-| Boot Architecture | BIOS / UEFI |
-| Kernel Type | Independent Native Kernel |
-| Display Architecture | Framebuffer |
-| Graphics Environment | Custom Desktop |
-| Storage Interface | Virtual Storage Devices |
-| Network Requirement | Optional |
+| Project Name | LIKO OS |
+| Architecture | x86_64 |
+| Operating System Type | Native OS |
+| Kernel Type | Custom kernel |
+| Main Languages | C, Assembly |
+| Boot Distribution | ISO |
+| Firmware Targets | BIOS / UEFI |
+| Primary Platform | VMware Workstation |
+| Memory Support Target | 4 GB – 32 GB |
+| Recommended VM Memory | 8–16 GB |
+| Virtual CPU Target | 2–8 vCPUs |
+| Virtual Storage Target | 30–100 GB |
+| Graphics | Custom desktop renderer |
+| Filesystem | FAT32 initially |
+| Network | Optional subsystem |
 | Internet Dependency | None for core operation |
-| Distribution Target | Bootable ISO |
+| Interface | Graphical Desktop + Terminal |
 
-BIOS and UEFI support are planned capabilities, not yet confirmed implementations.
+**Resource configuration note:** These values describe project targets and recommended virtual-machine configurations. They are not yet verified minimum or maximum limits of an implemented kernel.
 
-### Resource Engineering Targets
+---
 
-LIKO OS aims to operate within a constrained resource budget.
+## 3. System Architecture
 
-| Resource | Initial Design Target |
+LIKO OS is designed around independent subsystems with clearly defined responsibilities.
+
+### Architectural Layers
+
+1. Boot and initialization layer
+2. Kernel core
+3. Hardware abstraction layer
+4. Memory management subsystem
+5. Interrupt and exception subsystem
+6. Process and thread management
+7. Device driver framework
+8. Filesystem and storage services
+9. Graphics and window management
+10. System services
+11. Native applications
+
+The architecture is intended to support incremental development without requiring the entire operating system to be rewritten when an individual subsystem changes.
+
+---
+
+## 4. Kernel Architecture
+
+The kernel is the central component responsible for managing system execution and coordinating hardware-facing services.
+
+### Planned Kernel Components
+
+| Component | Responsibility |
+|---|---|
+| Kernel Core | Initialization and subsystem coordination |
+| Memory Manager | Physical memory allocation |
+| Virtual Memory | Address-space management |
+| Paging | Virtual-to-physical address translation |
+| Interrupt Manager | Hardware and software interrupts |
+| Exception Handler | CPU exception management |
+| Process Manager | Process lifecycle |
+| Thread Manager | Thread scheduling |
+| Scheduler | CPU execution scheduling |
+| System Calls | Kernel-service interface |
+| HAL | Hardware abstraction |
+| IPC | Inter-process communication |
+
+### Kernel Design Goals
+
+- Predictable execution.
+- Modular subsystem interfaces.
+- Controlled memory allocation.
+- Hardware abstraction.
+- Fault isolation where supported.
+- Efficient resource management.
+- Expandable kernel services.
+
+---
+
+## 5. Boot Architecture
+
+LIKO OS is intended to be distributed as a bootable ISO image.
+
+### Boot Sequence
+
+1. Firmware initialization.
+2. Bootloader execution.
+3. Kernel image loading.
+4. CPU environment initialization.
+5. Memory subsystem initialization.
+6. Interrupt configuration.
+7. Hardware discovery.
+8. Driver initialization.
+9. System service startup.
+10. Graphical environment initialization.
+11. Desktop launch.
+
+### Firmware Compatibility Targets
+
+- Legacy BIOS
+- UEFI
+
+The bootloader and kernel will be developed and tested against the firmware interfaces supported by the selected VMware virtual-machine configuration.
+
+---
+
+## 6. Memory Management
+
+Memory management is a major engineering priority.
+
+### Planned Features
+
+- Physical memory manager.
+- Virtual memory manager.
+- Paging support.
+- Kernel memory allocation.
+- Heap management.
+- Memory-region tracking.
+- Process address spaces.
+- Memory protection.
+- Allocation diagnostics.
+
+### Target Memory Configuration
+
+| Configuration | RAM |
 |---|---:|
-| RAM | 256 MB |
-| Processor | 1 Virtual CPU Core |
-| Storage | 512 MB |
-| Network | Optional |
-| Installation Media | ISO |
+| Minimum design target | 4 GB |
+| Standard configuration | 8 GB |
+| Advanced configuration | 16 GB |
+| Maximum design target | 32 GB |
 
-These figures represent initial engineering targets. Actual minimum requirements will be determined through testing and optimization.
-
----
-
-## 04 — System Architecture
-
-LIKO OS is planned as a layered operating system architecture.
-
-```text
-+------------------------------------------+
-|             LIKO DESKTOP                 |
-|       Windows / Taskbar / Start          |
-+------------------------------------------+
-|          SYSTEM APPLICATIONS             |
-|  Terminal | Explorer | Settings | Tools   |
-+------------------------------------------+
-|            SYSTEM SERVICES               |
-|     Process Services / File Services     |
-+------------------------------------------+
-|             GRAPHICS ENGINE              |
-|       Framebuffer / Rendering / Input    |
-+------------------------------------------+
-|              DEVICE DRIVERS              |
-|     Display / Keyboard / Storage / Mouse |
-+------------------------------------------+
-|               LIKO KERNEL                |
-|    Memory / Interrupts / Processes       |
-|    Hardware Abstraction / System Calls  |
-+------------------------------------------+
-|              BOOT LAYER                  |
-|          Bootloader / Initialization    |
-+------------------------------------------+
-|             x86_64 HARDWARE              |
-|         CPU / RAM / Display / Disk        |
-+------------------------------------------+
-```
-
-Each subsystem is intended to have a clearly defined responsibility and interface.
-
-This separation is designed to reduce coupling and make independent development and debugging possible.
+The kernel will be designed to support configurable memory limits rather than relying on a single fixed memory configuration.
 
 ---
 
-## 05 — Kernel Architecture
+## 7. Processor Architecture
 
-The kernel is the foundation of LIKO OS.
+LIKO OS targets the x86_64 instruction set.
 
-It will be responsible for controlling system resources and providing essential interfaces to higher-level components.
+### Planned CPU Features
 
-### Planned Kernel Subsystems
+- 64-bit execution.
+- CPU feature detection.
+- Descriptor tables.
+- Interrupt descriptor table.
+- Timer integration.
+- Multicore awareness.
+- Scheduling infrastructure.
+- CPU exception handling.
 
-**Memory Management**
-- Physical memory management
-- Virtual memory management
-- Page allocation
-- Kernel heap
-- Memory protection
-
-**Interrupt Management**
-- Interrupt Descriptor Table
-- Exception handling
-- Hardware interrupt handling
-- Programmable Interrupt Controller support
-
-**Process Management**
-- Process structures
-- Thread management
-- Scheduling
-- Context switching
-- Process isolation
-
-**System Interface**
-- System calls
-- Kernel services
-- Driver communication
-- User-space interaction
-
-**Hardware Abstraction**
-- Device interfaces
-- Hardware initialization
-- Platform-specific operations
-- Driver abstraction
-
-The kernel will initially prioritize essential functionality before introducing advanced process isolation and multitasking features.
+Actual multicore execution and advanced CPU capabilities will depend on their implementation and availability through VMware.
 
 ---
 
-## 06 — Boot Architecture
+## 8. Hardware Abstraction Layer
 
-The boot process is planned as a sequence of controlled initialization stages.
+The Hardware Abstraction Layer provides a consistent interface between the kernel and hardware-specific implementations.
 
-```text
-POWER ON
-   |
-   v
-FIRMWARE INITIALIZATION
-   |
-   v
-BOOTLOADER
-   |
-   v
-KERNEL LOADING
-   |
-   v
-CPU & MEMORY INITIALIZATION
-   |
-   v
-INTERRUPT INITIALIZATION
-   |
-   v
-DEVICE INITIALIZATION
-   |
-   v
-FILESYSTEM INITIALIZATION
-   |
-   v
-GRAPHICS INITIALIZATION
-   |
-   v
-SYSTEM SERVICES
-   |
-   v
-LIKO DESKTOP
-```
+### Planned Driver Categories
 
-The bootloader is expected to load the kernel and transfer execution to its entry point.
+| Driver | Purpose |
+|---|---|
+| Display Driver | Framebuffer output |
+| Keyboard Driver | Keyboard input |
+| Mouse Driver | Pointer input |
+| Storage Driver | Virtual disk access |
+| Timer Driver | Timekeeping and scheduling |
+| Network Driver | Network connectivity |
+| Audio Driver | Audio output |
 
-The kernel will then initialize the required subsystems and eventually start the graphical environment.
+Drivers will be implemented according to the virtual hardware presented by VMware.
 
 ---
 
-## 07 — Graphics & Desktop Environment
+## 9. Graphics Architecture
 
-LIKO Desktop is the planned graphical environment of LIKO OS.
-
-It is intended to provide a consistent interface without depending on an existing desktop environment.
+LIKO OS plans to include a custom graphical environment rather than depending on the desktop of a host operating system.
 
 ### Desktop Components
 
-| Component | Function |
-|---|---|
-| Desktop Manager | Main graphical workspace |
-| Window Manager | Window positioning and management |
-| Taskbar | Running applications and system controls |
-| Start Menu | Application launcher |
-| File Explorer | File and directory navigation |
-| Settings | System configuration |
-| Terminal | Native command-line interface |
-| Notification System | System notifications |
-| Icon Manager | Desktop and application icons |
+- Desktop Manager
+- Window Manager
+- Graphics Renderer
+- Taskbar
+- Start Menu
+- Application Launcher
+- Notification System
+- Desktop Icons
+- Theme Manager
+- Input Management
 
-### Visual Identity
+### Graphics Goals
 
-The visual design language is planned around:
-
-- Deep navy backgrounds
-- Electric blue accents
-- Cyan highlights
-- Minimal interface elements
-- High-contrast typography
-- Consistent iconography
-- Efficient rendering
-
-### Offline Assets
-
-The graphical environment will use locally stored resources.
-
-Planned asset categories:
-
-```text
-Assets/
-├── Branding/
-├── Icons/
-│   ├── System/
-│   ├── Applications/
-│   └── Files/
-├── Fonts/
-├── Wallpapers/
-├── Sounds/
-└── Themes/
-```
-
-No internet connection should be necessary to load the core desktop interface or its built-in assets.
+- Hardware-independent rendering interfaces.
+- Window management.
+- Multiple application windows.
+- Responsive desktop layout.
+- Custom visual effects.
+- Local graphics assets.
+- Offline fonts and icon resources.
 
 ---
 
-## 08 — Hardware & Driver Architecture
+## 10. Native System Environment
 
-LIKO OS is intended to use hardware resources directly through its native kernel and driver interfaces.
+The operating system is planned to include a collection of native system utilities.
 
-When running under VMware, the system will interact with the virtual hardware exposed by VMware.
-
-### Planned Device Support
-
-| Device | Planned Functionality |
-|---|---|
-| CPU | x86_64 execution |
-| RAM | Native memory management |
-| Display | Framebuffer output |
-| Keyboard | Keyboard input |
-| Mouse | Pointer input |
-| Storage | Virtual disk access |
-| Timer | System timing |
-| Network Adapter | Optional networking |
-| Audio | Future audio support |
-
-Hardware virtualization is not an operating system requirement for ordinary native execution.
-
-VMware provides the virtual hardware platform, while LIKO OS manages the resources made available to it.
-
----
-
-## 09 — Storage & Filesystem
-
-Storage management will be developed as an independent kernel subsystem.
-
-Initial filesystem goals:
-
-- File and directory operations
-- Filesystem initialization
-- File metadata
-- Read and write operations
-- Storage device abstraction
-
-FAT32 is a candidate for the initial filesystem implementation.
-
-Future filesystem support will depend on compatibility, reliability, and resource requirements.
-
----
-
-## 10 — Terminal Environment
-
-LIKO Terminal is intended to provide a native command-line interface.
-
-The first terminal prototype is developed in C for Windows as an early interface experiment. It is separate from the future native kernel terminal.
-
-Planned command categories:
-
-```text
-SYSTEM
-  HELP
-  CLEAR
-  VERSION
-  ABOUT
-
-FILESYSTEM
-  DIR
-  CD
-  MKDIR
-  TYPE
-
-PROCESS
-  PROCESS LIST
-  PROCESS INFO
-
-HARDWARE
-  CPU INFO
-  MEMORY INFO
-  DEVICE LIST
-```
-
-Commands will be implemented progressively as the underlying kernel services become available.
-
----
-
-## 11 — Application Architecture
-
-LIKO OS will use a modular application architecture.
-
-Planned built-in applications:
+### Planned Applications
 
 | Application | Purpose |
 |---|---|
-| LIKO Terminal | Command-line interface |
+| LIKO Terminal | Command-line environment |
 | LIKO Explorer | File management |
 | LIKO Settings | System configuration |
-| LIKO Calculator | Calculations |
 | LIKO System Monitor | Resource monitoring |
 | LIKO App Manager | Application management |
-| LIKO Browser | Future browsing application |
+| LIKO Text Editor | Text editing |
+| LIKO Calculator | Calculations |
 
-Applications are intended to use documented system interfaces instead of directly depending on internal kernel implementation details.
-
----
-
-## 12 — Development Toolchain
-
-The development environment is designed around open development tools.
-
-| Tool | Purpose |
-|---|---|
-| GCC Cross Compiler | Kernel compilation |
-| NASM | Assembly |
-| GNU Make | Build automation |
-| MSYS2 UCRT64 | Development environment |
-| Visual Studio Code | Source editing |
-| VMware Workstation | Virtual hardware testing |
-| Git | Version control |
-
-A dedicated cross-compilation toolchain will be used for native kernel development.
-
-The Windows-hosted C prototype and the native kernel are separate build targets.
+Applications will progressively integrate with the operating system's native system interfaces.
 
 ---
 
-## 13 — Repository Structure
+## 11. Storage Architecture
 
-The intended source tree is modular and organized by subsystem.
+The storage subsystem will provide persistent data access and filesystem services.
+
+### Initial Goals
+
+- Virtual disk detection.
+- Disk read/write interfaces.
+- Filesystem mounting.
+- Directory management.
+- File creation and deletion.
+- Storage diagnostics.
+- Filesystem error handling.
+
+FAT32 is an initial compatibility target. A dedicated LIKO filesystem may be considered in a later development stage.
+
+---
+
+## 12. Offline-First Architecture
+
+LIKO OS is designed to operate without requiring an internet connection for core system functionality.
+
+Local resources will include:
+
+- Fonts
+- Icons
+- Wallpapers
+- Sounds
+- System configuration
+- Desktop themes
+- Built-in applications
+
+Network functionality will be optional and will not be required for the basic boot process or desktop operation.
+
+---
+
+## 13. Security Architecture
+
+Security is intended to be integrated into the system architecture rather than added only at the application level.
+
+### Planned Security Mechanisms
+
+- Kernel/user privilege separation.
+- Memory protection.
+- Controlled system calls.
+- Process isolation.
+- Driver interface validation.
+- Filesystem access controls.
+- Application permission model.
+- Input validation.
+- System integrity checks.
+
+These are design objectives, not claims that the mechanisms have already been implemented.
+
+---
+
+## 14. Development Toolchain
+
+### Primary Languages
+
+- C — Kernel and system components.
+- Assembly — Architecture-specific startup and low-level operations.
+
+### Development Environment
+
+- GCC
+- GNU Binutils
+- GNU Make
+- MSYS2 UCRT64
+- Visual Studio Code
+- VMware Workstation
+
+### Development Principles
+
+- Modular source code.
+- Clear subsystem boundaries.
+- Reproducible builds.
+- Incremental testing.
+- Hardware abstraction.
+- Documented interfaces.
+- Separation of host-side tools and guest-side kernel code.
+
+---
+
+## 15. Repository Structure
 
 ```text
 LIKO-OS/
 │
 ├── Boot/
-│   ├── bootloader/
-│   ├── bios/
-│   └── uefi/
+│   ├── BIOS/
+│   ├── UEFI/
+│   └── Bootloader/
 │
 ├── Kernel/
 │   ├── Core/
 │   ├── Memory/
 │   ├── Interrupts/
 │   ├── Processes/
-│   └── SystemCalls/
+│   ├── Threads/
+│   ├── Scheduler/
+│   ├── SystemCalls/
+│   └── HAL/
 │
 ├── Drivers/
 │   ├── Display/
 │   ├── Keyboard/
 │   ├── Mouse/
 │   ├── Storage/
-│   └── Timer/
+│   ├── Timer/
+│   ├── Audio/
+│   └── Network/
 │
 ├── Graphics/
 │   ├── Engine/
+│   ├── Renderer/
 │   ├── Desktop/
 │   ├── WindowManager/
 │   ├── Taskbar/
-│   └── Icons/
+│   └── Themes/
 │
 ├── System/
 │   ├── Terminal/
 │   ├── Explorer/
 │   ├── Settings/
-│   └── Services/
+│   ├── Services/
+│   └── Security/
 │
 ├── Applications/
 │
+├── Filesystem/
+│
 ├── Assets/
-│   ├── Branding/
-│   ├── Fonts/
 │   ├── Icons/
+│   ├── Fonts/
 │   ├── Wallpapers/
 │   └── Sounds/
 │
 ├── Build/
-│
 ├── Documentation/
 │
 ├── Makefile
 └── README.md
 ```
 
-This structure is an architectural proposal and will evolve as implementation progresses.
+---
+
+## 16. Performance Engineering
+
+Performance is a core design consideration.
+
+### Optimization Objectives
+
+- Efficient memory allocation.
+- Minimal unnecessary background services.
+- Fast boot initialization.
+- Efficient graphics operations.
+- Reduced kernel overhead.
+- Configurable system services.
+- Scalable memory management.
+- Efficient filesystem access.
+
+The system will be optimized through measurement and testing rather than assuming performance from hardware specifications alone.
 
 ---
 
-## 14 — Development Roadmap
+## 17. Testing Strategy
 
-### Stage 01 — Foundation
-- [x] Initial Windows C terminal prototype
-- [ ] Native x86_64 project setup
-- [ ] Cross-compiler configuration
-- [ ] Bootloader integration
-- [ ] First native kernel entry point
+Testing will be performed incrementally.
 
-### Stage 02 — Kernel Core
-- [ ] Kernel initialization
-- [ ] Physical memory manager
-- [ ] Interrupt handling
-- [ ] Basic hardware abstraction
-- [ ] Kernel logging
+### Planned Testing Environments
 
-### Stage 03 — Hardware
-- [ ] Display driver
-- [ ] Keyboard driver
-- [ ] Timer driver
-- [ ] Storage driver
-- [ ] Mouse support
+- VMware BIOS virtual machines.
+- VMware UEFI virtual machines.
+- 4 GB RAM configurations.
+- 8 GB RAM configurations.
+- 16 GB RAM configurations.
+- 32 GB RAM configurations.
+- Different virtual CPU configurations.
+- Virtual storage configurations.
 
-### Stage 04 — Graphics
-- [ ] Framebuffer renderer
-- [ ] Font rendering
-- [ ] Graphics primitives
-- [ ] Window management
-- [ ] Desktop environment
+### Testing Priorities
 
-### Stage 05 — System Services
-- [ ] Filesystem
-- [ ] Process manager
-- [ ] System calls
-- [ ] Terminal
-- [ ] Application loading
-
-### Stage 06 — Distribution
-- [ ] ISO generation
-- [ ] VMware boot testing
-- [ ] Memory optimization
-- [ ] Boot optimization
-- [ ] Initial development release
+1. Boot reliability.
+2. Kernel initialization.
+3. Memory correctness.
+4. Interrupt handling.
+5. Driver stability.
+6. Filesystem integrity.
+7. Graphics stability.
+8. Application execution.
 
 ---
 
-## 15 — Performance & Optimization Strategy
+## 18. Development Roadmap
 
-Resource efficiency is a fundamental design constraint.
+### Phase 1 — Foundation
+- [ ] Project architecture.
+- [ ] Bootloader integration.
+- [ ] Native kernel entry.
+- [ ] Basic kernel initialization.
+- [ ] Serial/debug output.
 
-The development strategy prioritizes:
+### Phase 2 — Kernel Engineering
+- [ ] Physical memory management.
+- [ ] Paging.
+- [ ] Interrupt handling.
+- [ ] Timer support.
+- [ ] Basic scheduler.
+- [ ] System calls.
 
-1. Small kernel footprint
-2. Controlled memory allocation
-3. Minimal background services
-4. Efficient graphics rendering
-5. Static or carefully managed memory where appropriate
-6. Modular driver loading
-7. Minimal unnecessary dependencies
+### Phase 3 — Hardware Support
+- [ ] Display output.
+- [ ] Keyboard input.
+- [ ] Mouse input.
+- [ ] Virtual storage.
+- [ ] Filesystem integration.
 
-Performance claims will be based on measurements rather than assumptions.
+### Phase 4 — Graphics
+- [ ] Graphics renderer.
+- [ ] Window manager.
+- [ ] Desktop environment.
+- [ ] Taskbar.
+- [ ] Start menu.
+- [ ] Theme system.
 
----
+### Phase 5 — System Applications
+- [ ] Terminal.
+- [ ] File manager.
+- [ ] Settings.
+- [ ] System monitor.
+- [ ] Application framework.
 
-## 16 — Testing & Validation
-
-VMware Workstation is the primary development and validation environment.
-
-Testing objectives include:
-
-- Successful boot
-- Kernel initialization
-- Memory management validation
-- Interrupt handling
-- Device detection
-- Display output
-- Keyboard and mouse input
-- Filesystem operations
-- Desktop stability
-- Resource consumption
-
-Each subsystem should be tested independently before integration into the main system.
-
----
-
-## 17 — Security Principles
-
-Security will be developed as part of the kernel and system architecture.
-
-Long-term objectives include:
-
-- Memory isolation
-- Controlled system interfaces
-- Permission management
-- Safe application execution
-- Input validation
-- Filesystem access controls
-
-Security features will be documented according to their actual implementation status.
+### Phase 6 — Distribution
+- [ ] Bootable ISO.
+- [ ] VMware compatibility testing.
+- [ ] Installation workflow.
+- [ ] Documentation.
+- [ ] Release preparation.
 
 ---
 
-## 18 — Project Status
+## 19. Project Status
 
-**Development Stage:** Early Development
+LIKO OS is an active development project.
 
-LIKO OS is currently in its architectural and foundational development phase.
+The Windows-hosted terminal prototype is an early development utility and is separate from the planned native kernel.
 
-The project roadmap describes intended functionality, not a claim that all listed subsystems are already implemented.
+The native bootable operating system, desktop environment, hardware drivers, and other subsystems must be implemented and validated independently.
 
-The first milestone is a bootable native kernel running in VMware Workstation.
-
----
-
-## 19 — Contribution & Development
-
-Contributions and technical discussions are welcome.
-
-Potential areas of contribution:
-
-- Kernel engineering
-- C programming
-- Assembly
-- Graphics development
-- Driver development
-- Testing
-- Documentation
-
-All contributions should follow the project's modular architecture and coding conventions.
+No unimplemented feature should be considered production-ready.
 
 ---
 
-## 20 — Project Identity
+## 20. Project Philosophy
 
-**Project:** LIKO OS  
-**Category:** Operating System Development  
-**Architecture:** x86_64  
-**Primary Language:** C  
-**Low-Level Language:** Assembly  
-**Primary Target:** VMware Workstation  
-**Distribution Goal:** Bootable ISO  
-**Development Status:** In Progress
+LIKO OS is built around a simple engineering principle:
+
+**Build the operating system from the foundation upward.**
+
+The objective is not merely to create an interface that looks like an operating system. The objective is to develop the kernel, system architecture, hardware interfaces, and native user environment that make an independent operating system possible.
+
+---
+
+## 21. License and Contributions
+
+License and contribution policies will be defined as the project matures.
+
+Contributions should prioritize:
+
+- Code clarity.
+- Technical correctness.
+- Architecture consistency.
+- Documentation.
+- Reproducible testing.
+- Long-term maintainability.
 
 ---
 
 <p align="center">
+  <strong>LIKO OS — Designed as an Independent Computing Platform.</strong>
+</p>
 
-# LIKO OS
-
-### Beyond Applications. Towards an Operating System.
-
-**A native operating system project focused on lightweight engineering and independent architecture.**
-
+<p align="center">
+  Native Architecture · Independent Kernel · Custom Desktop
 </p>
